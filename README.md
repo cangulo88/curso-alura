@@ -6,3 +6,5 @@
 aca dejo un enlace de ejemplo de como opera un README
 
 https://github.com/camilafernanda/GlicoCare
+
+actualización 07-mar-2025
