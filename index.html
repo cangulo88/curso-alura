@@ -1,54 +1,89 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CURSO ALURA</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calendario de Reservas - Hospedaje</title>
+  <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css" rel="stylesheet">
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; background-color: #f4f4f4; }
+    h1 { text-align: center; }
+    #calendar { max-width: 900px; margin: 0 auto; background-color: white; padding: 10px; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+  </style>
 </head>
 <body>
-    <h1>Git Github</h1>
-<p>
-    <h2>CONFIGURACIONES:</h2><br>
-    ** git config --global user.name"[name]"<br>
-    ** git config --global user.email "[email]"<br>
-    ** git config --lit //es para comprobar las configuraciones que tenemos<br>
-</p>
-<p>
-    <h2>CREAR:</h2><br>
-    ** git clone[url] //crear un repositorio<br>
-    ** git init //crear un repositorio<br>
-</p>
-<p>
-    <h2>VERIFICAR:</h2><br>
-    ** git status //estado actual del proyecto<br>
-    ** git log //para el historial de los commits<br>
-    ** git diff //para ver los cambios en el archivo<br>
-    ** git branch //para ver los branch que tenemos dentro del proyecto<br>
-</p>
-}<p>
-    <h2>AGREGAR:</h2><br>
-    ** git add. //agregar todos los archivos<br>
-    ** git add [archivo] //agregar un archivo en especifico<br>
-</p>
-<p>
-    <h2>MOVER:</h2><br>
-    ** git commit -m "[mensaje]" //para mover los archivos de un area a otra<br>
-</p>
-<p>
-    <h2>ENVIAR O ACTUALIZAR:</h2><br>
-    ** git push
-</p>
-<p>
-    <h2>BAJAR O ACTUALIZAR DESDE EL REMOTO:</h2><br>
-    ** git pull
-</p>
-<p>
-    <h2>CAMBIAR:</h2><br>
-    ** git checkout -b [branch-name] //crear una rama nueva<br>
-    ** git merge //para mezclar las ramas<br>
-    ** git switch //para salir de una rama a otra<br>
-    ** git restore --source[hash][archivo] //es para restaurar el estado a un commit en especifico<br>
-</p>
+  <h1>Calendario de Reservas - Hospedaje</h1>
+  <div id="calendar"></div>
 
+  <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
+  <script>
+    const roomRates = {
+      "6": 20000,
+      "12": 35000,
+      "18": 50000,
+      "24": 60000
+    };
+
+    const reservations = [];
+
+    document.addEventListener('DOMContentLoaded', function() {
+      const calendarEl = document.getElementById('calendar');
+      const calendar = new FullCalendar.Calendar(calendarEl, {
+        initialView: 'timeGridWeek',
+        slotMinTime: '00:00:00',
+        slotMaxTime: '24:00:00',
+        selectable: true,
+        editable: true,
+        allDaySlot: false,
+
+        events: reservations,
+
+        select: function(info) {
+          const start = info.start;
+          const end = info.end;
+          const hours = Math.abs((end - start) / 36e5);
+          const validDurations = [6, 12, 18, 24];
+
+          if (!validDurations.includes(hours)) {
+            alert("Duración inválida. Solo se permiten reservas de 6, 12, 18 o 24 horas.");
+            return;
+          }
+
+          const room = prompt("Número de habitación (1-14):");
+          if (!room || room < 1 || room > 14) {
+            alert("Habitación inválida.");
+            return;
+          }
+
+          const client = prompt("Nombre del cliente:");
+          if (!client) return;
+
+          const price = roomRates[hours];
+
+          const reservation = {
+            title: `Hab ${room} - ${client} ($${price})`,
+            start: start,
+            end: end,
+            backgroundColor: '#3788d8',
+            extendedProps: {
+              room: room,
+              client: client,
+              duration: hours
+            }
+          };
+
+          calendar.addEvent(reservation);
+        },
+
+        eventClick: function(info) {
+          if (confirm(`¿Deseas eliminar la reserva de ${info.event.title}?`)) {
+            info.event.remove();
+          }
+        }
+      });
+
+      calendar.render();
+    });
+  </script>
 </body>
 </html>
