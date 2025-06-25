@@ -9,6 +9,16 @@ header {
   text-align: center;
 }
 
+header nav a {
+  color: #ffffffcc;
+  text-decoration: none;
+  margin: 0 10px;
+}
+
+header nav a:hover {
+  text-decoration: underline;
+}
+
 .product-card {
   background: white;
   border: 1px solid #ddd;
@@ -40,3 +50,8 @@ header {
 #checkout {
   width: 100%;
 }
+
+form input, form textarea {
+  border-radius: 6px;
+}
+
